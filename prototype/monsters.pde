@@ -41,11 +41,13 @@ class Monster {
       Impact impact = (Impact)this.itr.next(); 
       if(impact.getIntersect(this.loc)) {
         killed = true;
-      } else { killed = false; } 
+      } 
+      else { 
+        killed = false;
+      }
     }
     return killed;
   }
-
 }
 
 
@@ -57,13 +59,32 @@ class SeaSnake extends Monster {
     this.loc = PVector.add( this.origin, new PVector(random(-_origin.getRad()/2,_origin.getRad()/2 ), random(-_origin.getRad()/2,_origin.getRad()/2), 0f ) );
     this.acc = new PVector();
     this.vel = new PVector();
-    //    this.vel = PVector.sub( this.loc, this.target );
     this.health = 10;
   }  
 
   void draw() {
     this.update();
     fill( this.health );
+    fill( 180, 255, 180);
+    ellipse( this.loc.x, this.loc.y, 20, 20);
+  }
+}
+
+class Harpy extends Monster {
+
+  Harpy(Environment _origin, Ship _target) {
+    this.origin = _origin.get();
+    this.target = _target.get();
+    this.loc = PVector.add( this.origin, new PVector(random(-_origin.getRad()/2,_origin.getRad()/2 ), random(-_origin.getRad()/2,_origin.getRad()/2), 0f ) );
+    this.acc = new PVector();
+    this.vel = new PVector();
+    this.health = 10;
+  }  
+
+  void draw() {
+    this.update();
+    fill( this.health );
+    fill( 255, 180, 180);
     ellipse( this.loc.x, this.loc.y, 20, 20);
   }
 }

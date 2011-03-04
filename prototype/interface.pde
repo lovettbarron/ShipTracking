@@ -74,11 +74,11 @@ class Waves {
 
 void keyPressed() {
   if( key == 'a') {
-    ship.add( new PVector( ship.get().x-10, ship.get().y ) );
+    //ship.add( new PVector( ship.get().x-10, ship.get().y ) );
   } 
   else
     if( key == 'd') {
-      ship.add( new PVector( ship.get().x+10, ship.get().y ) );
+      //ship.add( new PVector( ship.get().x+10, ship.get().y ) );
     } 
     else
       if( key == 'w') {

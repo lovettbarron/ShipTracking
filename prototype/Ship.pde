@@ -3,22 +3,22 @@
 //// Ship movement, ostensibly controlled by GPS data
 ////////
 class Ship {
-  private PVector loc;
-  private float direction;
+  private PVector loc, acc, vel;
+  
 
-  Ship( float _x, float _y, float _dir) {
+  Ship( float _x, float _y) {
     loc = new PVector( _x, _y);
-    //    loc.set(_x, _y, 0);
-    direction = _dir;
+    this.acc = new PVector();
+    this.vel = new PVector();
   } 
 
   void draw() {
+    update();
     updateLocation();
-    
+
     fill( 255);
     pushMatrix();
     translate( loc.x, loc.y);
-    rotate( tan( direction ) );
     beginShape();
     vertex(0, 0);
     vertex(500/zoom, height/zoom);
@@ -27,8 +27,26 @@ class Ship {
     popMatrix();
   }
 
+  void update( float multi) {
+    PVector diff = PVector.sub( new PVector( mouseX, mouseY ),this.loc);
+    diff.normalize();
+    float factor = 1.0;
+    diff.mult(factor);
+    this.acc.set(diff);  
+
+    this.vel.add(this.acc);
+    this.loc.add(this.vel);
+    this.vel.normalize();
+    this.vel.mult(multi);
+    this.acc = new PVector();
+  }
+
+  void update() {
+    update(1.);
+  }
+
   void updateLocation() {
-    loc.add( new PVector( random( -5, 5), random(-5,5), 0f) );
+//    loc.add( new PVector( random( -5, 5), random(-5,5), 0f) );
   }
 
   void updateDirection() {
@@ -119,139 +137,6 @@ class Defense {
       }
       tempShot.draw();
     }
-  }
-}
-
-
-
-/////////
-//// Bullet object
-////////
-class Shot {
-  float decay, angle, life;
-  PVector loc, acc, vel;
-  float cLength = 30;
-  Shot(PVector _origin, float _angle, float _decay) {
-    angle = _angle;
-    decay = _decay;
-    life = 0;
-
-    loc = _origin;  
-    acc = new PVector(); 
-    vel = PVector.sub( 
-    new PVector( 
-    ( cLength * cos( radians( angle ) ) + loc.x),
-    ( cLength * sin( radians( angle ) ) + loc.y), 0f),
-    loc);
-  }
-
-  void update() {
-    //println( "x:" + loc.x + "y:" + loc.y);
-    life += 1;
-    vel.add(acc);
-    loc.add(vel);
-    //    acc = new PVector();
-    vel.normalize();
-    vel.mult(2.2f); 
-
-    //    if (vel.mag() > maxvel) {
-    //    vel.normalize();
-    //  vel.mult(maxvel);
-    //}
-
-    if( life <= decay ) {
-      //      vel.add( acc );
-    } 
-    else {
-    }
-  }
-
-  void draw() {
-    this.update();
-    ellipse( loc.x, loc.y, 10,10);
-  }
-
-  boolean decayed() {
-    if( life >= decay ) {
-      return true;
-    } 
-    else { 
-      return false;
-    }
-  }
-
-  void impact() {
-    decay = 0;
-  }
-}
-
-class Impact {
-  private PVector loc;
-  private float rad, mag, blast;
-  private boolean disipate, die = false;
-  private int count;
-
-  Impact( PVector _loc, float _rad, float _mag) {
-    loc = _loc;
-    rad = _rad;
-    mag = _mag;
-    blast = 1;
-    count = 0;
-  }
-
-  void draw() {
-    this.update();
-    color( 255,0,0, mag);
-    ellipse( loc.x, loc.y, blast, blast);
-  }
-
-  void update() {
-    count++;
-    if( !disipate ) {
-      if( blast < rad) {
-        println( "increasing " + blast + " by " + mag );
-        blast = blast*cos(mag)*count;
-      } 
-      else { 
-        disipate = true;
-      }
-    }
-
-    if( disipate) {
-      blast -= mag*4; 
-      if( blast <= 0 ) {
-        die = true;
-      }
-    }
-  }
-
-  boolean getIntersect( PVector object ) {
-    boolean intersect;
-    float distance =  abs(PVector.dist( this.loc, object ) )  ;
-    println( distance );
-    if( distance <= rad ) {
-      intersect = true;
-    } 
-    else { 
-      intersect = false;
-    }
-    return intersect;
-  }
-
-  boolean die() {
-    return die;
-  }
-
-  float getRad() {
-    return blast;
-  }
-
-  float getMag() {
-    return mag;
-  }
-
-  PVector getLoc() {
-    return loc;
   }
 }
 
