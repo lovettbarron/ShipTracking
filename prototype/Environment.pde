@@ -6,6 +6,7 @@ class Environment {
   protected PVector loc;
   protected float rad, mag;
   protected List<Monster> monsters;
+  private Iterator iter;
   /*
   Environment(PVector _location, float _radius, float _magnitude) {
    loc = _location;
@@ -16,9 +17,9 @@ class Environment {
   PVector get() {
     return this.loc;
   }
-  
+
   float getRad() {
-   return this.rad; 
+    return this.rad;
   }
 
   void draw() {
@@ -39,6 +40,8 @@ class Environment {
     Iterator iter = this.monsters.iterator();
     while( iter.hasNext() ) {
       Monster tempMonster = (Monster)iter.next(); 
+//      println( "IsKilled: " +  );
+      if( tempMonster.killed() ) iter.remove();
       tempMonster.draw();
     }
   }

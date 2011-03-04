@@ -13,6 +13,8 @@ class Ship {
   } 
 
   void draw() {
+    updateLocation();
+    
     fill( 255);
     pushMatrix();
     translate( loc.x, loc.y);
@@ -26,6 +28,7 @@ class Ship {
   }
 
   void updateLocation() {
+    loc.add( new PVector( random( -5, 5), random(-5,5), 0f) );
   }
 
   void updateDirection() {
@@ -107,12 +110,12 @@ class Defense {
     while( iterator.hasNext() ) {
       Shot tempShot = (Shot)iterator.next(); 
       if(tempShot.decayed()) { 
-           iterator.remove();
+        iterator.remove();
       }
-      else if( trigger == true){
-            iterator.remove();
-            blast.add( new Impact( tempShot.loc, 100, 1) );
-            trigger = false;
+      else if( trigger == true) {
+        iterator.remove();
+        blast.add( new Impact( tempShot.loc, 100, 1) );
+        trigger = false;
       }
       tempShot.draw();
     }
@@ -186,36 +189,69 @@ class Impact {
   private PVector loc;
   private float rad, mag, blast;
   private boolean disipate, die = false;
-  
-  Impact( PVector _loc, float _rad, float _mag) {
-   loc = _loc;
-   rad = _rad;
-   mag = _mag;
-   blast = 0; 
-  }
-  
-  void draw() {
-   this.update();
-   color( 255,0,0, mag);
-   ellipse( loc.x, loc.y, rad, rad); 
-  }
-  
-  void update() {
-    if( blast < rad/2){
-     blast += mag; 
-    } else { disipate = true; }
+  private int count;
 
-    if( disipate = true) {
-     blast -= mag; 
-     if( blast <= 0 ) {
-       die = true;
-     }
+  Impact( PVector _loc, float _rad, float _mag) {
+    loc = _loc;
+    rad = _rad;
+    mag = _mag;
+    blast = 1;
+    count = 0;
+  }
+
+  void draw() {
+    this.update();
+    color( 255,0,0, mag);
+    ellipse( loc.x, loc.y, blast, blast);
+  }
+
+  void update() {
+    count++;
+    if( !disipate ) {
+      if( blast < rad) {
+        println( "increasing " + blast + " by " + mag );
+        blast = blast*cos(mag)*count;
+      } 
+      else { 
+        disipate = true;
+      }
+    }
+
+    if( disipate) {
+      blast -= mag*4; 
+      if( blast <= 0 ) {
+        die = true;
+      }
     }
   }
-  
-  boolean die() {
-   return die; 
+
+  boolean getIntersect( PVector object ) {
+    boolean intersect;
+    float distance =  abs(PVector.dist( this.loc, object ) )  ;
+    println( distance );
+    if( distance <= rad ) {
+      intersect = true;
+    } 
+    else { 
+      intersect = false;
+    }
+    return intersect;
   }
-  
+
+  boolean die() {
+    return die;
+  }
+
+  float getRad() {
+    return blast;
+  }
+
+  float getMag() {
+    return mag;
+  }
+
+  PVector getLoc() {
+    return loc;
+  }
 }
 
