@@ -21,6 +21,28 @@ class Compass {
 }
 
 
+////////
+//// mouse
+////////
+class Control {
+  private PVector loc; 
+  
+  Control() {
+    loc = new PVector( mouseX, mouseY);
+  }
+  
+  void update() {
+   loc.set( camera.get().x + mouseX,  camera.get().y + mouseY, 0f ); 
+  }
+  
+  PVector get() {
+    println( loc );
+    return loc;
+  }
+  
+}
+
+
 /////////
 //// Heads up display and information
 ////////
@@ -39,16 +61,16 @@ class Hud {
 ////////
 class Waves {
   public float Falloff=0.5,Gain,Length=0.002,Speed=0.001,Distance=0.3;
-  public int Divide,Octave=1, Position,Number;
+  public float Divide,Octave=1, Position,Number;
   public boolean Fill=true;
   private float t=0, j=0;
 
   Waves() {
-    Divide=width/4;
-    Position=height/4;
-    Gain=-height;
+    Divide= (camera.get().x + (camera.view().x/2)) / 4;
+    Position=( camera.get().y + (camera.view().y/2) )/4;
+    Gain=-( camera.get().y + (camera.view().y/2) );
     Length = 0.002;
-    Number = 100;
+    Number = 10;
   } 
 
 
@@ -57,11 +79,11 @@ class Waves {
     noStroke();
     for (int i = 1 ; i <=Number ; ++i) {
       beginShape();
-      for (float x =-Divide; x <= width+Divide; x += Divide) {
+      for (float x =-Divide; x <= ( camera.get().x + (camera.view().x) )+Divide; x += Divide) {
         vertex(x, Gain*noise( x*Length + t, t + i*Distance )+(i*100) - Position );
       }
-      vertex(width,height);
-      vertex(0,height);
+      vertex(camera.get().x + (camera.view().x), camera.get().y + (camera.view().y));
+      vertex(camera.get().x - (camera.view().x), camera.get().y + (camera.view().y));
       endShape();
       t = t + tan(noise(j)*PI/2)*Speed;
       j=j+0.1;
@@ -96,11 +118,18 @@ void keyPressed() {
               if( key == ' ') {                  
                 defense.fire();
               } else
-              if( key == '2') {
+              if( key == '3') {
                spawnEnviro(); 
               } else
               if( key == '1') {
-                 storm.add(new Storm( new PVector( random(0,width), random(0,height), 0f), random(0,width/2), random(0,1000)*.1 ) ); 
+             //    storm.add(new Storm( new PVector( random(0,width), random(0,height), 0f), random(0,width/2), random(0,1000)*.1 ) ); 
+
+              drawStorm();
+              } else
+              if( key == '2') {
+             //    storm.add(new Storm( new PVector( random(0,width), random(0,height), 0f), random(0,width/2), random(0,1000)*.1 ) ); 
+
+              drawReef();
               }
 }
 

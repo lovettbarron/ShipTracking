@@ -78,7 +78,7 @@ class Harpy extends Monster {
     this.loc = PVector.add( this.origin, new PVector(random(-_origin.getRad()/2,_origin.getRad()/2 ), random(-_origin.getRad()/2,_origin.getRad()/2), 0f ) );
     this.acc = new PVector();
     this.vel = new PVector();
-    this.health = 10;
+    this.health = 15;
   }  
 
   void draw() {
@@ -86,6 +86,10 @@ class Harpy extends Monster {
     fill( this.health );
     fill( 255, 180, 180);
     ellipse( this.loc.x, this.loc.y, 20, 20);
+  }
+  
+  void update(){
+   update( 3.3 ); 
   }
 }
 

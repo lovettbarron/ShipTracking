@@ -3,13 +3,14 @@
 //// Ship movement, ostensibly controlled by GPS data
 ////////
 class Ship {
-  private PVector loc, acc, vel;
-  
+  private PVector loc, acc, vel, diff, prev;
 
   Ship( float _x, float _y) {
     loc = new PVector( _x, _y);
     this.acc = new PVector();
     this.vel = new PVector();
+    this.diff = new PVector();
+    this.prev = new PVector();
   } 
 
   void draw() {
@@ -28,7 +29,7 @@ class Ship {
   }
 
   void update( float multi) {
-    PVector diff = PVector.sub( new PVector( mouseX, mouseY ),this.loc);
+    diff = PVector.sub( new PVector( control.get().x, control.get().y ), this.loc);
     diff.normalize();
     float factor = 1.0;
     diff.mult(factor);
@@ -45,8 +46,16 @@ class Ship {
     update(1.);
   }
 
+  void setDif() {
+    this.prev = loc;
+  }
+
+  PVector diff() {;
+    return PVector.sub( loc,diff );
+  }
+
   void updateLocation() {
-//    loc.add( new PVector( random( -5, 5), random(-5,5), 0f) );
+    //    loc.add( new PVector( random( -5, 5), random(-5,5), 0f) );
   }
 
   void updateDirection() {
@@ -103,10 +112,8 @@ class Defense {
   }
 
   void draw() {
-
     this.update();
-    rect((ship.get().x + cos(radians(angle))*(cLength/2)),(ship.get().y + sin(radians(angle))*(cLength/2)), 10, 10 );
-
+    rect((ship.get().x + cos(radians(angle))*(cLength)),(ship.get().y + sin(radians(angle))*(cLength)), 4, 4 );
     this.drawShots();
   }
 
