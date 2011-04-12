@@ -1,6 +1,8 @@
-Random little thing I'm playing around with.
-Trying to get a better understanding of Python in general, and drawing in live data feeds + GIS in particular.
+LeyLines!
 
-We'll see how this works out.  The project is completely free form, zero planning, and will expand to include random libraries and whatnot as my interests and goals shift about.
 
-Enjoy.
+Sign up for this game at http://leylin.es
+
+I'm planning on releasing a prototype in late spring. It is being prototyped in Processing, but am probably going to port to OF because of some of the gameplay decision I've been making.
+
+It saw a bunch of development in march, very little dev in April because of other commitments, but will hopefully be resuming mid May.
